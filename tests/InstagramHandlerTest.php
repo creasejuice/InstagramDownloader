@@ -25,7 +25,7 @@ class InstagramHandlerTest extends TestCase
     }
 
     /** @test */
-    public function handler_can_not_validates_given_url()
+    public function handler_can_not_validate_given_url()
     {
         $handler = new InstagramHandler(new Client());
         $url = URL::fromString('https://pornhub.com/watch/demandingpapayawhipaardwolf');
