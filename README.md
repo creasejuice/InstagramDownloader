@@ -12,7 +12,6 @@ You have two options of how to use this package
 
 ```
 <?php
-use AnyDownloader\DownloadManager\DownloadManager;
 use AnyDownloader\DownloadManager\Model\URL;
 use AnyDownloader\InstagramDownloader\InstagramHandler;
 use Goutte\Client;
@@ -20,13 +19,11 @@ use Goutte\Client;
 include_once 'vendor/autoload.php';
 
 $instagramPostUrl = URL::fromString('https://www.instagram.com/p/CPymPNfBvnM/');
-
-$downloadManager = new DownloadManager();
-$downloadManager->addHandler(new InstagramHandler(new Client()));
-
-$result = $downloadManager->fetchResource($instagramPostUrl);
+$instagramHandler = new InstagramHandler(new Client());
+$result = $instagramHandler->fetchResource($instagramPostUrl);
 
 print_r($result->toArray());
+
 /**
 Array
 (
