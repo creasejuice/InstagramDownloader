@@ -1,0 +1,43 @@
+{
+  "name": "any-downloader/instagram-downloader",
+  "type": "library",
+  "description": "Extract videos from Instagram",
+  "keywords": [
+    "instagram downloader",
+    "instagram scraper",
+    "instagram video extractor",
+    "instagram photo extractor"
+  ],
+  "homepage": "https://iwannacode.net",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Oleksandr Pinchuk",
+      "email": "intracomof@gmail.com",
+      "homepage": "https://iwannacode.net",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.2.5",
+    "any-downloader/download-manager": "*",
+    "fabpot/goutte": "dev-master"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "9.5.x-dev"
+  },
+  "autoload": {
+    "psr-4": {
+      "AnyDownloader\\InstagramDownloader\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "AnyDownloader\\InstagramDownloader\\Test\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  },
+  "minimum-stability": "dev"
+}
