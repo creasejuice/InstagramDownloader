@@ -49,51 +49,56 @@ final class InstagramHandler extends BaseHandler
             throw new NothingToExtractException();
         }
 
-        $instagramResource = new InstagramFetchedResource($url);
+        try {
 
-        $sharedData = explode('window._sharedData = ', $crawler->html());
-        $sharedData = explode("</script>", $sharedData[1]);
-        $sharedData = json_decode(rtrim($sharedData[0], ';'));
-        $media = $sharedData->entry_data->PostPage[0]->graphql->shortcode_media;
+            $instagramResource = new InstagramFetchedResource($url);
 
-        $instagramResource->setImagePreview(JPGResourceItem::fromURL(URL::fromString($media->display_url)));
+            $sharedData = explode('window._sharedData = ', $crawler->html());
+            $sharedData = explode("</script>", $sharedData[1]);
+            $sharedData = json_decode(rtrim($sharedData[0], ';'));
+            $media = $sharedData->entry_data->PostPage[0]->graphql->shortcode_media;
 
-        if ($media->is_video == 1) {
-            $video = MP4ResourceItem::fromURL(URL::fromString($media->video_url));
-            $instagramResource->setVideoPreview($video);
-            $instagramResource->addItem($video);
-        } else {
-            foreach($media->display_resources as $resource) {
-                $instagramResource->addItem(
-                    JPGResourceItem::fromURL(
-                        URL::fromString($resource->src),
-                        $resource->config_width . 'x' . $resource->config_height
+            $instagramResource->setImagePreview(JPGResourceItem::fromURL(URL::fromString($media->display_url)));
+
+            if ($media->is_video == 1) {
+                $video = MP4ResourceItem::fromURL(URL::fromString($media->video_url));
+                $instagramResource->setVideoPreview($video);
+                $instagramResource->addItem($video);
+            } else {
+                foreach ($media->display_resources as $resource) {
+                    $instagramResource->addItem(
+                        JPGResourceItem::fromURL(
+                            URL::fromString($resource->src),
+                            $resource->config_width . 'x' . $resource->config_height
+                        )
+                    );
+                }
+            }
+
+            if ($media->owner) {
+                try {
+                    $avatar = URL::fromString($media->owner->profile_pic_url);
+                } catch (\Exception $exception) {
+                    $avatar = null;
+                }
+                $instagramResource->addAttribute(
+                    new AuthorAttribute(
+                        $media->owner->id,
+                        $media->owner->username,
+                        $media->owner->full_name,
+                        $avatar
                     )
                 );
             }
-        }
 
-        if ($media->owner) {
-            try {
-                $avatar = URL::fromString($media->owner->profile_pic_url);
-            } catch(\Exception $exception) {
-                $avatar = null;
+            $instagramResource->addAttribute(new IdAttribute($media->id));
+            if ($media->edge_media_to_caption && count($media->edge_media_to_caption->edges)) {
+                $instagramResource->addAttribute(
+                    new TextAttribute($media->edge_media_to_caption->edges[0]->node->text)
+                );
             }
-            $instagramResource->addAttribute(
-                new AuthorAttribute(
-                    $media->owner->id,
-                    $media->owner->username,
-                    $media->owner->full_name,
-                    $avatar
-                )
-            );
-        }
-
-        $instagramResource->addAttribute(new IdAttribute($media->id));
-        if ($media->edge_media_to_caption && count($media->edge_media_to_caption->edges)) {
-            $instagramResource->addAttribute(
-                new TextAttribute($media->edge_media_to_caption->edges[0]->node->text)
-            );
+        } catch (\Throwable $exception) {
+            throw new NothingToExtractException($exception->getMessage());
         }
 
         return $instagramResource;
