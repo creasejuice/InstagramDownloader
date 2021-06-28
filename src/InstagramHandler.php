@@ -7,8 +7,7 @@ use AnyDownloader\DownloadManager\Model\Attribute\AuthorAttribute;
 use AnyDownloader\DownloadManager\Model\Attribute\IdAttribute;
 use AnyDownloader\DownloadManager\Model\Attribute\TextAttribute;
 use AnyDownloader\DownloadManager\Model\FetchedResource;
-use AnyDownloader\DownloadManager\Model\ResourceItem\Image\JPGResourceItem;
-use AnyDownloader\DownloadManager\Model\ResourceItem\Video\MP4ResourceItem;
+use AnyDownloader\DownloadManager\Model\ResourceItem\ResourceItemFactory;
 use AnyDownloader\DownloadManager\Model\URL;
 use AnyDownloader\InstagramDownloader\Model\InstagramFetchedResource;
 use Goutte\Client;
@@ -58,16 +57,20 @@ final class InstagramHandler extends BaseHandler
             $sharedData = json_decode(rtrim($sharedData[0], ';'));
             $media = $sharedData->entry_data->PostPage[0]->graphql->shortcode_media;
 
-            $instagramResource->setImagePreview(JPGResourceItem::fromURL(URL::fromString($media->display_url)));
+            $instagramResource->setImagePreview(
+                ResourceItemFactory::fromURL(
+                    URL::fromString($media->display_url)
+                )
+            );
 
             if ($media->is_video == 1) {
-                $video = MP4ResourceItem::fromURL(URL::fromString($media->video_url));
+                $video = ResourceItemFactory::fromURL(URL::fromString($media->video_url));
                 $instagramResource->setVideoPreview($video);
                 $instagramResource->addItem($video);
             } else {
                 foreach ($media->display_resources as $resource) {
                     $instagramResource->addItem(
-                        JPGResourceItem::fromURL(
+                        ResourceItemFactory::fromURL(
                             URL::fromString($resource->src),
                             $resource->config_width . 'x' . $resource->config_height
                         )
