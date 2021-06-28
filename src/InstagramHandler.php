@@ -1,7 +1,6 @@
 <?php
 namespace AnyDownloader\InstagramDownloader;
 
-use AnyDownloader\DownloadManager\Exception\CanNotMapGivenURLToResourceItemException;
 use AnyDownloader\DownloadManager\Exception\NothingToExtractException;
 use AnyDownloader\DownloadManager\Exception\NotValidUrlException;
 use AnyDownloader\DownloadManager\Handler\BaseHandler;
@@ -41,7 +40,6 @@ final class InstagramHandler extends BaseHandler
      * @param URL $url
      * @return FetchedResource
      * @throws NothingToExtractException
-     * @throws CanNotMapGivenURLToResourceItemException
      * @throws NotValidUrlException
      */
     public function fetchResource(URL $url): FetchedResource
@@ -64,18 +62,18 @@ final class InstagramHandler extends BaseHandler
         );
 
         if ($media->is_video == 1) {
-
-            $video = ResourceItemFactory::fromURL(URL::fromString($media->video_url));
-            $instagramResource->setVideoPreview($video);
-            $instagramResource->addItem($video);
+            if ($video = ResourceItemFactory::fromURL(URL::fromString($media->video_url))) {
+                $instagramResource->setVideoPreview($video);
+                $instagramResource->addItem($video);
+            }
         } else {
             foreach ($media->display_resources as $resource) {
-                $instagramResource->addItem(
-                    ResourceItemFactory::fromURL(
-                        URL::fromString($resource->src),
-                        $resource->config_width . 'x' . $resource->config_height
-                    )
+                $item = ResourceItemFactory::fromURL(URL::fromString($resource->src),
+                    $resource->config_width . 'x' . $resource->config_height
                 );
+                if ($item) {
+                    $instagramResource->addItem($item);
+                }
             }
         }
 
