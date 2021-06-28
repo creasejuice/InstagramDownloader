@@ -1,6 +1,7 @@
 <?php
 namespace AnyDownloader\InstagramDownloader;
 
+use AnyDownloader\DownloadManager\Exception\CanNotMapGivenURLToResourceItemException;
 use AnyDownloader\DownloadManager\Exception\NothingToExtractException;
 use AnyDownloader\DownloadManager\Handler\BaseHandler;
 use AnyDownloader\DownloadManager\Model\Attribute\AuthorAttribute;
@@ -27,7 +28,7 @@ final class InstagramHandler extends BaseHandler
     private $client;
 
     /**
-     * RedGifsHandler constructor.
+     * InstagramHandler constructor.
      * @param Client $client
      */
     public function __construct(Client $client)
@@ -43,66 +44,61 @@ final class InstagramHandler extends BaseHandler
     public function fetchResource(URL $url): FetchedResource
     {
         $crawler = $this->client->request('GET', $url->getValue());
-
         if (stripos($crawler->html(), 'window._sharedData = ') === false) {
             throw new NothingToExtractException();
         }
+        $instagramResource = new InstagramFetchedResource($url);
 
-        try {
+        $sharedData = explode('window._sharedData = ', $crawler->html());
+        $sharedData = explode("</script>", $sharedData[1]);
+        $sharedData = json_decode(rtrim($sharedData[0], ';'));
+        $media = $sharedData->entry_data->PostPage[0]->graphql->shortcode_media;
 
-            $instagramResource = new InstagramFetchedResource($url);
+        $instagramResource->setImagePreview(
+            ResourceItemFactory::fromURL(
+                URL::fromString($media->display_url)
+            )
+        );
 
-            $sharedData = explode('window._sharedData = ', $crawler->html());
-            $sharedData = explode("</script>", $sharedData[1]);
-            $sharedData = json_decode(rtrim($sharedData[0], ';'));
-            $media = $sharedData->entry_data->PostPage[0]->graphql->shortcode_media;
+        if ($media->is_video == 1) {
 
-            $instagramResource->setImagePreview(
-                ResourceItemFactory::fromURL(
-                    URL::fromString($media->display_url)
-                )
-            );
-
-            if ($media->is_video == 1) {
-                $video = ResourceItemFactory::fromURL(URL::fromString($media->video_url));
-                $instagramResource->setVideoPreview($video);
-                $instagramResource->addItem($video);
-            } else {
-                foreach ($media->display_resources as $resource) {
-                    $instagramResource->addItem(
-                        ResourceItemFactory::fromURL(
-                            URL::fromString($resource->src),
-                            $resource->config_width . 'x' . $resource->config_height
-                        )
-                    );
-                }
-            }
-
-            if ($media->owner) {
-                try {
-                    $avatar = URL::fromString($media->owner->profile_pic_url);
-                } catch (\Exception $exception) {
-                    $avatar = null;
-                }
-                $instagramResource->addAttribute(
-                    new AuthorAttribute(
-                        $media->owner->id,
-                        $media->owner->username,
-                        $media->owner->full_name,
-                        $avatar
+            $video = ResourceItemFactory::fromURL(URL::fromString($media->video_url));
+            $instagramResource->setVideoPreview($video);
+            $instagramResource->addItem($video);
+        } else {
+            foreach ($media->display_resources as $resource) {
+                $instagramResource->addItem(
+                    ResourceItemFactory::fromURL(
+                        URL::fromString($resource->src),
+                        $resource->config_width . 'x' . $resource->config_height
                     )
                 );
             }
-
-            $instagramResource->addAttribute(new IdAttribute($media->id));
-            if ($media->edge_media_to_caption && count($media->edge_media_to_caption->edges)) {
-                $instagramResource->addAttribute(
-                    new TextAttribute($media->edge_media_to_caption->edges[0]->node->text)
-                );
-            }
-        } catch (\Throwable $exception) {
-            throw new NothingToExtractException($exception->getMessage());
         }
+
+        if ($media->owner) {
+            try {
+                $avatar = URL::fromString($media->owner->profile_pic_url);
+            } catch (\Exception $exception) {
+                $avatar = null;
+            }
+            $instagramResource->addAttribute(
+                new AuthorAttribute(
+                    $media->owner->id,
+                    $media->owner->username,
+                    $media->owner->full_name,
+                    $avatar
+                )
+            );
+        }
+
+        $instagramResource->addAttribute(new IdAttribute($media->id));
+        if ($media->edge_media_to_caption && count($media->edge_media_to_caption->edges)) {
+            $instagramResource->addAttribute(
+                new TextAttribute($media->edge_media_to_caption->edges[0]->node->text)
+            );
+        }
+
 
         return $instagramResource;
     }

@@ -1,5 +1,5 @@
 <?php
-namespace AnyDownloader\RedGifsDownloader\Tests;
+namespace AnyDownloader\InstagramDownloader\Tests;
 
 use AnyDownloader\DownloadManager\Model\URL;
 use AnyDownloader\InstagramDownloader\InstagramHandler;
