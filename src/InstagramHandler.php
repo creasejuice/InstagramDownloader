@@ -3,6 +3,7 @@ namespace AnyDownloader\InstagramDownloader;
 
 use AnyDownloader\DownloadManager\Exception\CanNotMapGivenURLToResourceItemException;
 use AnyDownloader\DownloadManager\Exception\NothingToExtractException;
+use AnyDownloader\DownloadManager\Exception\NotValidUrlException;
 use AnyDownloader\DownloadManager\Handler\BaseHandler;
 use AnyDownloader\DownloadManager\Model\Attribute\AuthorAttribute;
 use AnyDownloader\DownloadManager\Model\Attribute\IdAttribute;
@@ -19,7 +20,7 @@ final class InstagramHandler extends BaseHandler
      * @var string[]
      */
     protected $urlRegExPatterns = [
-        '/(\/\/|www\.)instagram\.com\/p\/[a-zA-Z0-9]+/s'
+        '/(\/\/|www\.)instagram\.com\/p\/[a-zA-Z0-9]+/'
     ];
 
     /**
@@ -38,8 +39,10 @@ final class InstagramHandler extends BaseHandler
 
     /**
      * @param URL $url
-     * @return InstagramFetchedResource
+     * @return FetchedResource
      * @throws NothingToExtractException
+     * @throws CanNotMapGivenURLToResourceItemException
+     * @throws NotValidUrlException
      */
     public function fetchResource(URL $url): FetchedResource
     {
@@ -98,7 +101,6 @@ final class InstagramHandler extends BaseHandler
                 new TextAttribute($media->edge_media_to_caption->edges[0]->node->text)
             );
         }
-
 
         return $instagramResource;
     }
