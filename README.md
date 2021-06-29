@@ -27,58 +27,52 @@ print_r($result->toArray());
 /**
 Array
 (
-    [source_url] => https://www.instagram.com/p/CPymPNfBvnM/
+    [source_url] => https://www.instagram.com/p/CQmlIsWDdKh/
     [preview_image] => Array
         (
             [type] => image
             [format] => jpg
             [quality] =>
-            [url] => https://instagram.fbkk5-5.fna.fbcdn.net/v/t51.2885-15/e35/s1080x1080/196905492_308586814084192_8841447818317806237_n.jpg?tp=1&_nc_ht=instagram.fbkk5-5.fna.fbcdn.net&_nc_cat=104&_nc_ohc=EcBDKzknHxsAX8C-SaS&edm=AABBvjUBAAAA&ccb=7-4&oh=9bfcbd02f5902da916579c3870c0c509&oe=60E07906&_nc_sid=83d603
+            [url] => https://instagram.fbkk5-3.fna.fbcdn.net/v/t51.2885-15/e35/208793833_197236692346254_2941739638331277075_n.jpg?tp=1&_nc_ht=instagram.fbkk5-3.fna.fbcdn.net&_nc_cat=1&_nc_ohc=hqGl8coYoC8AX8_TAe9&edm=AABBvjUBAAAA&ccb=7-4&oh=f926bd2039a4d20f8ae3c6d737012193&oe=60DE0C89&_nc_sid=83d603
             [mime_type] => image/jpg
         )
 
-    [preview_video] =>
+    [preview_video] => Array
+        (
+            [type] => video
+            [format] => mp4
+            [quality] =>
+            [url] => https://instagram.fbkk5-4.fna.fbcdn.net/v/t50.2886-16/208293603_963789457782658_1292489345229422396_n.mp4?_nc_ht=instagram.fbkk5-4.fna.fbcdn.net&_nc_cat=110&_nc_ohc=2HRPftxAQe4AX_GHIqf&edm=AABBvjUBAAAA&ccb=7-4&oe=60DDFA2A&oh=1f8c2a5cdd0aa5e228dc8fa9fd3ae7ff&_nc_sid=83d603
+            [mime_type] => video/mp4
+        )
+
     [attributes] => Array
         (
             [author] => Array
                 (
-                    [id] => 13028111539
-                    [avatar_url] => https://instagram.fbkk5-3.fna.fbcdn.net/v/t51.2885-19/s150x150/66856406_428564481080089_1662075382033022976_n.jpg?tp=1&_nc_ht=instagram.fbkk5-3.fna.fbcdn.net&_nc_ohc=1fgXiTDZgw8AX_90LXg&edm=AABBvjUBAAAA&ccb=7-4&oh=90326fbc674a8fd52008b97beab5ed57&oe=60E0A6ED&_nc_sid=83d603
-                    [full_name] =>
-                    [nickname] => elonmusk
+                    [id] => 184692323
+                    [avatar_url] => https://instagram.fbkk5-3.fna.fbcdn.net/v/t51.2885-19/s150x150/194921896_794059374581630_4576885874575036174_n.jpg?tp=1&_nc_ht=instagram.fbkk5-3.fna.fbcdn.net&_nc_ohc=_DZ3X5MWU60AX8b0Ss2&edm=AABBvjUBAAAA&ccb=7-4&oh=1c701acfbf691866bca1a075a0d019db&oe=60E201DA&_nc_sid=83d603
+                    [full_name] => Lady Gaga
+                    [nickname] => ladygaga
                 )
 
-            [id] => 2590300906730224076
-            [text] => 🎭
+            [id] => 2604932759571780257
+            [text] => ☀️#bekind even if it’s to yourself
         )
 
     [items] => Array
         (
-            [0] => Array
+            [video] => Array
                 (
-                    [type] => image
-                    [format] => jpg
-                    [quality] => 640x640
-                    [url] => https://instagram.fbkk5-5.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/s640x640/196905492_308586814084192_8841447818317806237_n.jpg?tp=1&_nc_ht=instagram.fbkk5-5.fna.fbcdn.net&_nc_cat=104&_nc_ohc=EcBDKzknHxsAX8C-SaS&edm=AABBvjUBAAAA&ccb=7-4&oh=e7715c9bfbdbe077396ba7c4a9bea9de&oe=60DF09C2&_nc_sid=83d603
-                    [mime_type] => image/jpg
-                )
+                    [0] => Array
+                        (
+                            [type] => video
+                            [format] => mp4
+                            [quality] =>
+                            [url] => https://instagram.fbkk5-4.fna.fbcdn.net/v/t50.2886-16/208293603_963789457782658_1292489345229422396_n.mp4?_nc_ht=instagram.fbkk5-4.fna.fbcdn.net&_nc_cat=110&_nc_ohc=2HRPftxAQe4AX_GHIqf&edm=AABBvjUBAAAA&ccb=7-4&oe=60DDFA2A&oh=1f8c2a5cdd0aa5e228dc8fa9fd3ae7ff&_nc_sid=83d603
+                            [mime_type] => video/mp4
+                        )
 
-            [1] => Array
-                (
-                    [type] => image
-                    [format] => jpg
-                    [quality] => 750x750
-                    [url] => https://instagram.fbkk5-5.fna.fbcdn.net/v/t51.2885-15/sh0.08/e35/s750x750/196905492_308586814084192_8841447818317806237_n.jpg?tp=1&_nc_ht=instagram.fbkk5-5.fna.fbcdn.net&_nc_cat=104&_nc_ohc=EcBDKzknHxsAX8C-SaS&edm=AABBvjUBAAAA&ccb=7-4&oh=f5d76f82f03d35f0cab43933747b3955&oe=60E03306&_nc_sid=83d603
-                    [mime_type] => image/jpg
-                )
-
-            [2] => Array
-                (
-                    [type] => image
-                    [format] => jpg
-                    [quality] => 1080x1080
-                    [url] => https://instagram.fbkk5-5.fna.fbcdn.net/v/t51.2885-15/e35/s1080x1080/196905492_308586814084192_8841447818317806237_n.jpg?tp=1&_nc_ht=instagram.fbkk5-5.fna.fbcdn.net&_nc_cat=104&_nc_ohc=EcBDKzknHxsAX8C-SaS&edm=AABBvjUBAAAA&ccb=7-4&oh=9bfcbd02f5902da916579c3870c0c509&oe=60E07906&_nc_sid=83d603
-                    [mime_type] => image/jpg
                 )
 
         )

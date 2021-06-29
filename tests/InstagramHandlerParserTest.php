@@ -21,7 +21,6 @@ class InstagramHandlerParserTest extends TestCase
 
         $this->assertInstanceOf(InstagramFetchedResource::class, $res);
 
-
         $this->assertEquals([
             'source_url' => 'https://www.instagram.com/p/CQmlIsWDdKh/',
             'preview_image' => [
