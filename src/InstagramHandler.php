@@ -8,6 +8,7 @@ use AnyDownloader\DownloadManager\Model\Attribute\AuthorAttribute;
 use AnyDownloader\DownloadManager\Model\Attribute\IdAttribute;
 use AnyDownloader\DownloadManager\Model\Attribute\TextAttribute;
 use AnyDownloader\DownloadManager\Model\FetchedResource;
+use AnyDownloader\DownloadManager\Model\ResourceItem;
 use AnyDownloader\DownloadManager\Model\ResourceItem\ResourceItemFactory;
 use AnyDownloader\DownloadManager\Model\URL;
 use AnyDownloader\InstagramDownloader\Model\InstagramFetchedResource;
@@ -61,21 +62,16 @@ final class InstagramHandler extends BaseHandler
             )
         );
 
-        if ($media->is_video == 1) {
-            if ($video = ResourceItemFactory::fromURL(URL::fromString($media->video_url))) {
-                $instagramResource->setVideoPreview($video);
-                $instagramResource->addItem($video);
+        /** Instagram carousel */
+        if (isset($media->edge_sidecar_to_children) && is_array($media->edge_sidecar_to_children->edges)) {
+            foreach($media->edge_sidecar_to_children->edges as $item) {
+                $item = $item->node;
+                $this->handleMedia($instagramResource, $item);
             }
         } else {
-            foreach ($media->display_resources as $resource) {
-                $item = ResourceItemFactory::fromURL(URL::fromString($resource->src),
-                    $resource->config_width . 'x' . $resource->config_height
-                );
-                if ($item) {
-                    $instagramResource->addItem($item);
-                }
-            }
+            $this->handleMedia($instagramResource, $media);
         }
+
 
         if ($media->owner) {
             try {
@@ -101,6 +97,35 @@ final class InstagramHandler extends BaseHandler
         }
 
         return $instagramResource;
+    }
+
+    /**
+     * @param FetchedResource $instagramResource
+     * @param $media
+     * @throws NotValidUrlException
+     */
+    protected function handleMedia(FetchedResource $instagramResource, $media)
+    {
+        if ($media->is_video == 1) {
+            if ($video = ResourceItemFactory::fromURL(URL::fromString($media->video_url))) {
+                $instagramResource->setVideoPreview($video);
+                $instagramResource->addItem($video);
+            }
+            return;
+        }
+
+        if (!isset($media->display_resources)) {
+            return;
+        }
+
+        // extract only high quality media items (usually, the latest array element)
+        $resource = end($media->display_resources);
+        $item = ResourceItemFactory::fromURL(URL::fromString($resource->src),
+            $resource->config_width . 'x' . $resource->config_height
+        );
+        if ($item) {
+            $instagramResource->addItem($item);
+        }
     }
 
 }
