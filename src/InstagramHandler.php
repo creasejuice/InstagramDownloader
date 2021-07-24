@@ -5,6 +5,7 @@ use AnyDownloader\DownloadManager\Exception\NothingToExtractException;
 use AnyDownloader\DownloadManager\Exception\NotValidUrlException;
 use AnyDownloader\DownloadManager\Handler\BaseHandler;
 use AnyDownloader\DownloadManager\Model\Attribute\AuthorAttribute;
+use AnyDownloader\DownloadManager\Model\Attribute\HashtagsAttribute;
 use AnyDownloader\DownloadManager\Model\Attribute\IdAttribute;
 use AnyDownloader\DownloadManager\Model\Attribute\TextAttribute;
 use AnyDownloader\DownloadManager\Model\FetchedResource;
@@ -72,7 +73,6 @@ final class InstagramHandler extends BaseHandler
             $this->handleMedia($instagramResource, $media);
         }
 
-
         if ($media->owner) {
             try {
                 $avatar = URL::fromString($media->owner->profile_pic_url);
@@ -91,8 +91,10 @@ final class InstagramHandler extends BaseHandler
 
         $instagramResource->addAttribute(new IdAttribute($media->id));
         if ($media->edge_media_to_caption && count($media->edge_media_to_caption->edges)) {
+            $textAttr = new TextAttribute($media->edge_media_to_caption->edges[0]->node->text);
+            $instagramResource->addAttribute($textAttr);
             $instagramResource->addAttribute(
-                new TextAttribute($media->edge_media_to_caption->edges[0]->node->text)
+                HashtagsAttribute::fromTextArray($textAttr->getValue())
             );
         }
 
@@ -104,7 +106,7 @@ final class InstagramHandler extends BaseHandler
      * @param $media
      * @throws NotValidUrlException
      */
-    protected function handleMedia(FetchedResource $instagramResource, $media)
+    private function handleMedia(FetchedResource $instagramResource, $media)
     {
         if ($media->is_video == 1) {
             if ($video = ResourceItemFactory::fromURL(URL::fromString($media->video_url))) {
