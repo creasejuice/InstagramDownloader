@@ -1,7 +1,9 @@
 # InstagramDownloader
-Get video & image sources from Instagram
+Get video & image sources from Instagram.
 
-Install via Composer
+Access token is not required
+
+### Install via Composer
 ```
 composer require any-downloader/instagram-downloader
 ```
@@ -102,6 +104,17 @@ $downloadManager->addHandler(new InstagramHandler(new Client()));
 $result = $downloadManager->fetchResource($instagramPostUrl);
 
 print_r($result->toArray());
+```
+
+### How to use proxy
+
+For this purpose you can instantiate `Client` with predefined proxy configuration like in the example below:
+
+```php
+...
+$client = new Client(HttpClient::create(['proxy' => 'https://xx.xx.xx.xx:8080'])); 
+$instagramHandler = new InstagramHandler($client);
+...
 ```
 
 [iwannacode.net](https://iwannacode.net)
