@@ -20,7 +20,7 @@ use Goutte\Client;
 
 include_once 'vendor/autoload.php';
 
-$instagramPostUrl = URL::fromString('https://www.instagram.com/p/CPymPNfBvnM/');
+$instagramPostUrl = URL::fromString('https://www.instagram.com/p/CSXM80kJ4iQ/');
 $instagramHandler = new InstagramHandler(new Client());
 $result = $instagramHandler->fetchResource($instagramPostUrl);
 
@@ -96,7 +96,7 @@ use Goutte\Client;
 
 include_once 'vendor/autoload.php';
 
-$instagramPostUrl = URL::fromString('https://www.instagram.com/p/CPymPNfBvnM/');
+$instagramPostUrl = URL::fromString('https://www.instagram.com/p/CSXM80kJ4iQ/');
 
 $downloadManager = new DownloadManager();
 $downloadManager->addHandler(new InstagramHandler(new Client()));
