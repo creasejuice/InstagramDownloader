@@ -20,8 +20,8 @@
   ],
   "require": {
     "php": ">=7.2.5",
-    "any-downloader/download-manager": "*",
-    "fabpot/goutte": "dev-master",
+    "any-downloader/download-manager": "1.*",
+    "fabpot/goutte": "*",
     "ext-json": "*"
   },
   "require-dev": {
