@@ -56,7 +56,9 @@ final class InstagramHandler extends BaseHandler
         $sharedData = explode("</script>", $sharedData[1]);
         $sharedData = json_decode(rtrim($sharedData[0], ';'));
         $media = $sharedData->entry_data->PostPage[0]->graphql->shortcode_media;
-
+        if ($media === null) {
+            throw new NothingToExtractException();
+        }
         $instagramResource->setImagePreview(
             ResourceItemFactory::fromURL(
                 URL::fromString($media->display_url)
