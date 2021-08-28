@@ -52,13 +52,13 @@ final class InstagramHandler extends BaseHandler
         }
         $instagramResource = new InstagramFetchedResource($url);
 
-        $sharedData = explode('window._sharedData = ', $crawler->html());
-        $sharedData = explode("</script>", $sharedData[1]);
-        $sharedData = json_decode(rtrim($sharedData[0], ';'));
-        $media = $sharedData->entry_data->PostPage[0]->graphql->shortcode_media;
+        if (!$media = $this->getMediaDataFromSharedData($crawler->html())) {
+            $media = $this->getMediaDataFromAdditionalDataLoader($crawler->html());
+        }
         if ($media === null) {
             throw new NothingToExtractException();
         }
+
         $instagramResource->setImagePreview(
             ResourceItemFactory::fromURL(
                 URL::fromString($media->display_url)
@@ -131,5 +131,37 @@ final class InstagramHandler extends BaseHandler
             $instagramResource->addItem($item);
         }
     }
+
+    /**
+     * @param $html
+     * @return mixed
+     */
+    protected function getMediaDataFromAdditionalDataLoader($html)
+    {
+        $sharedData = explode('window._sharedData = ', $html);
+        $sharedData = explode("</script>", $sharedData[1]);
+        $sharedData = explode("<script type=\"text/javascript\">window.__additionalDataLoaded('/p/CS4YSxoNiBq/',", $sharedData[2])[1];
+        $sharedData = json_decode(rtrim($sharedData, ');'));
+        if ($sharedData) {
+            return $sharedData->graphql->shortcode_media;
+        }
+        return null;
+    }
+
+    /**
+     * @param $html
+     * @return mixed
+     */
+    protected function getMediaDataFromSharedData($html)
+    {
+        $sharedData = explode('window._sharedData = ', $html);
+        $sharedData = explode("</script>", $sharedData[1]);
+        $sharedData = json_decode(rtrim($sharedData[0], ';'));
+        if ($sharedData) {
+            return $sharedData->entry_data->PostPage[0]->graphql->shortcode_media;
+        }
+        return null;
+    }
+
 
 }
